@@ -1,53 +1,50 @@
-apply plugin: 'com.android.library'
-
-ext {
-    bintrayRepo = 'maven'
-    bintrayName = 'android-logger'
-
-    publishedGroupId = 'com.github.jpage4500'
-    libraryName = 'AndroidLogger'
-    artifact = 'android-logger'
-
-    libraryDescription = 'Simple Slf4j logger implementation for Android with tag prefix and optional file logging support'
-
-    siteUrl = 'https://github.com/jpage4500/AndroidLogger'
-    gitUrl = 'https://github.com/jpage4500/AndroidLogger.git'
-
-    libraryVersion = '1.0.0'
-
-    developerId = 'jpage4500'
-    developerName = 'Joe Page'
-    developerEmail = 'jpage4500@gmail.com'
-
-    licenseName = 'The Apache Software License, Version 2.0'
-    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-    allLicenses = ["Apache-2.0"]
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.novoda:bintray-release:0.3.4'
+    }
 }
 
+apply plugin: 'com.android.library'
+apply plugin: 'idea'
+apply plugin: 'bintray-release'
+
 android {
-    compileSdkVersion 25
+    compileSdkVersion 23
     buildToolsVersion "25.0.2"
 
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 25
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0.0"
 
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+}
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'org.slf4j:slf4j-api:1.7.22'                    // slf4j logging framework
 }
 
-apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
-apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
+publish {
+    userOrg = 'jpage4500'
+    groupId = 'com.github.jpage4500'
+    artifactId = 'android-logger'
+    publishVersion = android.defaultConfig.versionName
+    description = 'Simple Slf4j logger implementation for Android with tag prefix and optional file logging support'
+    website = 'https://github.com/jpage4500/AndroidLogger'
+}

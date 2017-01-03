@@ -27,6 +27,8 @@ public class AndroidLoggerFactory implements ILoggerFactory {
     /**
      * log to file
      * NOTE: will open up more options later
+     *
+     * @param logToFile - true to log to a file (more options to come)
      */
     public static void logToFile(boolean logToFile) {
         if (logToFile) {
