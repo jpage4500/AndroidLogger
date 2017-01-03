@@ -4,7 +4,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "com.jp.androidlogger"
+        applicationId "com.jp.androidlogger.sample"
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
@@ -20,6 +20,5 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:25.1.0'
-    compile 'org.slf4j:slf4j-api:1.7.22'                    // slf4j logging framework
+    compile 'com.android.support:support-v4:25.1.0'
 }

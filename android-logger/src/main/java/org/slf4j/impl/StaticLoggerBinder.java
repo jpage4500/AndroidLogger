@@ -22,7 +22,7 @@
 
 package org.slf4j.impl;
 
-import com.jp.androidlogger.log.AndroidLoggerFactory;
+import com.jp.androidlogger.AndroidLoggerFactory;
 
 import org.slf4j.ILoggerFactory;
 import org.slf4j.LoggerFactory;

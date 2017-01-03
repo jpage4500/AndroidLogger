@@ -1,4 +1,4 @@
-package com.jp.androidlogger.log;
+package com.jp.androidlogger;
 
 import android.os.Environment;
 import android.util.Log;

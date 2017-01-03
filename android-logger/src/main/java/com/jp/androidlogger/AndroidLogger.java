@@ -1,8 +1,6 @@
-package com.jp.androidlogger.log;
+package com.jp.androidlogger;
 
 import android.util.Log;
-
-import com.jp.androidlogger.BuildConfig;
 
 import org.slf4j.helpers.FormattingTuple;
 import org.slf4j.helpers.MarkerIgnoringBase;
@@ -37,7 +35,7 @@ public class AndroidLogger extends MarkerIgnoringBase {
     }
 
     private boolean isDebug() {
-        return BuildConfig.DEBUG;
+        return true; //BuildConfig.DEBUG;
     }
 
     /**
