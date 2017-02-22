@@ -19,6 +19,13 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:support-v4:25.1.0'
+    // compile 'com.jp.android-logger:1.0.0'
+    compile project(':android-logger')
+
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+    provided 'org.projectlombok:lombok:1.16.10'                         // lombok annotation support
+    annotationProcessor "org.projectlombok:lombok:1.16.0"
+
+    compile 'com.android.support:support-v4:25.1.1'
+    compile 'com.android.support:appcompat-v7:25.1.1'
 }

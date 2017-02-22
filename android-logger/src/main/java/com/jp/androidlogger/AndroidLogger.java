@@ -6,54 +6,33 @@ import org.slf4j.helpers.FormattingTuple;
 import org.slf4j.helpers.MarkerIgnoringBase;
 import org.slf4j.helpers.MessageFormatter;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 public class AndroidLogger extends MarkerIgnoringBase {
 
     private static final long serialVersionUID = -1227274521521287937L;
 
-    private static final String DEFAULT_DATE_FORMAT = "MM-dd HH:mm:ss";
+    private AndroidLoggerFactory androidLoggerFactory;
 
-    private File logFile;
-    private SimpleDateFormat simpleDateFormat;
-
-    protected AndroidLogger(final String name) {
+    protected AndroidLogger(String name, AndroidLoggerFactory androidLoggerFactory) {
         this.name = name;
+        this.androidLoggerFactory = androidLoggerFactory;
     }
 
-    protected void setFile(File file) {
-        logFile = file;
-    }
-
-    protected void setDateFormat(String format) {
-        simpleDateFormat = new SimpleDateFormat("MM-dd HH:mm:ss ", Locale.US);
-    }
-
-    private boolean isDebug() {
-        return true; //BuildConfig.DEBUG;
+    void setName(String tagName) {
+        this.name = tagName;
     }
 
     /**
-     * Only log trace and debug output for debug builds
+     * Only log trace and debug lines if user has enabled debug mode
      */
     @Override
     public boolean isTraceEnabled() {
-        return isDebug();
+        return androidLoggerFactory.isEnabled(Log.VERBOSE);
     }
 
     @Override
     public void trace(final String msg) {
         if (!isTraceEnabled()) return;
-        Log.v(this.name, msg);
-
-        if (logFile != null) {
-            logToFile('V', msg);
-        }
+        log(Log.VERBOSE, msg, null);
     }
 
     @Override
@@ -78,10 +57,6 @@ public class AndroidLogger extends MarkerIgnoringBase {
     public void trace(final String msg, final Throwable t) {
         if (!isTraceEnabled()) return;
         Log.v(this.name, msg, t);
-
-        if (logFile != null) {
-            logToFile('V', msg);
-        }
     }
 
     /**
@@ -89,17 +64,13 @@ public class AndroidLogger extends MarkerIgnoringBase {
      */
     @Override
     public boolean isDebugEnabled() {
-        return isDebug();
+        return androidLoggerFactory.isEnabled(Log.DEBUG);
     }
 
     @Override
     public void debug(final String msg) {
         if (!isDebugEnabled()) return;
-        Log.d(this.name, msg);
-
-        if (logFile != null) {
-            logToFile('D', msg);
-        }
+        log(Log.DEBUG, msg, null);
     }
 
     @Override
@@ -124,199 +95,175 @@ public class AndroidLogger extends MarkerIgnoringBase {
     public void debug(final String msg, final Throwable t) {
         if (!isDebugEnabled()) return;
         Log.d(this.name, msg, t);
-
-        if (logFile != null) {
-            logToFile('D', msg);
-        }
     }
 
     @Override
     public boolean isInfoEnabled() {
-        return true;
+        return androidLoggerFactory.isEnabled(Log.INFO);
     }
 
     @Override
     public void info(final String msg) {
-        Log.i(this.name, msg);
-
-        if (logFile != null) {
-            logToFile('I', msg);
-        }
+        if (!isInfoEnabled()) return;
+        log(Log.INFO, msg, null);
     }
 
     @Override
     public void info(final String format, final Object arg) {
+        if (!isInfoEnabled()) return;
         logInfo(MessageFormatter.format(format, arg));
     }
 
     @Override
     public void info(final String format, final Object arg1, final Object arg2) {
+        if (!isInfoEnabled()) return;
         logInfo(MessageFormatter.format(format, arg1, arg2));
     }
 
     @Override
     public void info(final String format, final Object... arguments) {
+        if (!isInfoEnabled()) return;
         logInfo(MessageFormatter.arrayFormat(format, arguments));
     }
 
     @Override
     public void info(final String msg, final Throwable t) {
-        Log.i(this.name, msg, t);
-
-        if (logFile != null) {
-            logToFile('I', msg);
-        }
+        if (!isInfoEnabled()) return;
+        log(Log.INFO, msg, t);
     }
 
     @Override
     public boolean isWarnEnabled() {
-        return true;
+        return androidLoggerFactory.isEnabled(Log.WARN);
     }
 
     @Override
     public void warn(final String msg) {
-        Log.w(this.name, msg);
-
-        if (logFile != null) {
-            logToFile('W', msg);
-        }
+        if (!isWarnEnabled()) return;
+        log(Log.WARN, msg, null);
     }
 
     @Override
     public void warn(final String format, final Object arg) {
+        if (!isWarnEnabled()) return;
         logWarning(MessageFormatter.format(format, arg));
     }
 
     @Override
     public void warn(final String format, final Object arg1, final Object arg2) {
+        if (!isWarnEnabled()) return;
         logWarning(MessageFormatter.format(format, arg1, arg2));
     }
 
     @Override
     public void warn(final String format, final Object... arguments) {
+        if (!isWarnEnabled()) return;
         logWarning(MessageFormatter.arrayFormat(format, arguments));
     }
 
     @Override
     public void warn(final String msg, final Throwable t) {
+        if (!isWarnEnabled()) return;
         Log.w(this.name, msg, t);
-
-        if (logFile != null) {
-            logToFile('W', msg);
-        }
     }
 
     @Override
     public boolean isErrorEnabled() {
-        return true;
+        return androidLoggerFactory.isEnabled(Log.ERROR);
     }
 
     @Override
     public void error(final String msg) {
-        Log.e(this.name, msg);
+        if (!isErrorEnabled()) return;
+        log(Log.ERROR, msg, null);
     }
 
     @Override
     public void error(final String format, final Object arg) {
+        if (!isErrorEnabled()) return;
         logError(MessageFormatter.format(format, arg));
     }
 
     @Override
     public void error(final String format, final Object arg1, final Object arg2) {
+        if (!isErrorEnabled()) return;
         logError(MessageFormatter.format(format, arg1, arg2));
     }
 
     @Override
     public void error(final String format, final Object... arguments) {
+        if (!isErrorEnabled()) return;
         logError(MessageFormatter.arrayFormat(format, arguments));
     }
 
     @Override
     public void error(final String msg, final Throwable t) {
+        if (!isErrorEnabled()) return;
         Log.e(this.name, msg, t);
     }
 
     private void logVerbose(FormattingTuple ft) {
-        if (ft.getThrowable() == null) {
-            Log.v(this.name, ft.getMessage());
-        } else {
-            Log.v(this.name, ft.getMessage(), ft.getThrowable());
-        }
-
-        if (logFile != null) {
-            logToFile('V', ft.getMessage());
-        }
+        log(Log.VERBOSE, ft.getMessage(), ft.getThrowable());
     }
 
     private void logDebug(FormattingTuple ft) {
-        if (ft.getThrowable() == null) {
-            Log.d(this.name, ft.getMessage());
-        } else {
-            Log.d(this.name, ft.getMessage(), ft.getThrowable());
-        }
-
-        if (logFile != null) {
-            logToFile('D', ft.getMessage());
-        }
+        log(Log.DEBUG, ft.getMessage(), ft.getThrowable());
     }
 
     private void logInfo(FormattingTuple ft) {
-        if (ft.getThrowable() == null) {
-            Log.i(this.name, ft.getMessage());
-        } else {
-            Log.i(this.name, ft.getMessage(), ft.getThrowable());
-        }
-
-        if (logFile != null) {
-            logToFile('I', ft.getMessage());
-        }
+        log(Log.INFO, ft.getMessage(), ft.getThrowable());
     }
 
     private void logWarning(FormattingTuple ft) {
-        if (ft.getThrowable() == null) {
-            Log.w(this.name, ft.getMessage());
-        } else {
-            Log.w(this.name, ft.getMessage(), ft.getThrowable());
-        }
-
-        if (logFile != null) {
-            logToFile('W', ft.getMessage());
-        }
+        log(Log.WARN, ft.getMessage(), ft.getThrowable());
     }
 
     private void logError(FormattingTuple ft) {
-        if (ft.getThrowable() == null) {
-            Log.e(this.name, ft.getMessage());
-        } else {
-            Log.e(this.name, ft.getMessage(), ft.getThrowable());
+        log(Log.ERROR, ft.getMessage(), ft.getThrowable());
+    }
+
+    /**
+     * handle everything log() method:
+     * - logs to file if enabled
+     * - logs LONG output to multipe lines if enabled
+     */
+    private void log(int logLevel, String message, Throwable tr) {
+        if (tr != null) {
+            // append throwable if set
+            message += '\n' + Log.getStackTraceString(tr);
         }
 
-        if (logFile != null) {
-            logToFile('E', ft.getMessage());
+        String origMessage = null;
+        if (androidLoggerFactory.isLongLoggingEnabled() && message.length() > androidLoggerFactory.getMaxCharactersPerLine()) {
+            origMessage = message;
+            message = message.substring(0, androidLoggerFactory.getMaxCharactersPerLine());
+        }
+
+        switch (logLevel) {
+            case Log.VERBOSE:
+                Log.v(name, message);
+                break;
+            case Log.DEBUG:
+                Log.d(name, message);
+                break;
+            case Log.INFO:
+                Log.i(name, message);
+                break;
+            case Log.WARN:
+                Log.w(name, message);
+                break;
+            case Log.ERROR:
+                Log.e(name, message);
+                break;
+        }
+
+        // log to file if set
+        androidLoggerFactory.logToFile(logLevel, name, message);
+
+        if (origMessage != null) {
+            // recursive call to log remaining message
+            log(logLevel, origMessage.substring(androidLoggerFactory.getMaxCharactersPerLine()), null);
         }
     }
 
-    private void logToFile(char level, String line) {
-        if (logFile == null) {
-            return;
-        }
-
-        if (simpleDateFormat == null) {
-            simpleDateFormat = new SimpleDateFormat(DEFAULT_DATE_FORMAT, Locale.US);
-        }
-
-        FileWriter logWriter = null;
-        try {
-            logWriter = new FileWriter(logFile, true);
-            BufferedWriter out = new BufferedWriter(logWriter);
-            out.write(simpleDateFormat.format(new Date()));
-            out.write(" " + level + " " + " " + name + " ");
-            out.write(line);
-            out.newLine();
-            out.flush();
-            out.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }
