@@ -1,12 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.jp.androidlogger">
-
-    <application
-        android:allowBackup="true"
-        android:label="@string/android_logger"
-        android:supportsRtl="true"
-        >
-
-    </application>
+<manifest
+    package="com.jp.androidlogger">
 
 </manifest>
