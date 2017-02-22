@@ -40,6 +40,10 @@ public class AndroidLoggerFactory implements ILoggerFactory {
      * - if not set just the "className" will be logged (instead of "com.package.something.className")
      */
     public void setTagPrefix(String prefix) {
+        if (prefix == null || prefix.equals(tagPrefix)) {
+            // no change
+            return;
+        }
         tagPrefix = prefix;
 
         // update name for any existing loggers
