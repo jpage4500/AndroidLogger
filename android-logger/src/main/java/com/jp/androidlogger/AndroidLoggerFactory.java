@@ -93,8 +93,7 @@ public class AndroidLoggerFactory implements ILoggerFactory {
         if (!append) {
             logFile.delete();
         }
-        if (EXTRA_LOGGING)
-            Log.v(TAG, "logging to: " + logFile.getAbsolutePath() + ", append:" + append);
+        if (EXTRA_LOGGING) Log.v(TAG, "logging to: " + logFile.getAbsolutePath() + ", append:" + append);
     }
 
     @Override
