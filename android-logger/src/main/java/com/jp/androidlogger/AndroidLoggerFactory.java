@@ -85,7 +85,7 @@ public class AndroidLoggerFactory implements ILoggerFactory {
      * - defaults to 4000 characters
      */
     public void setMaxCharactersPerLine(int maxCharactersPerLine) {
-        maxCharactersPerLine = maxCharactersPerLine;
+        this.maxCharactersPerLine = maxCharactersPerLine;
         if (EXTRA_LOGGING) Log.v(TAG, "setMaxCharactersPerLine: " + maxCharactersPerLine);
     }
 

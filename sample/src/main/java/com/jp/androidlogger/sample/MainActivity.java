@@ -2,6 +2,9 @@ package com.jp.androidlogger.sample;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,7 +20,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        log.debug("onCreate: ");
+        Button button = (Button) findViewById(R.id.button);
+        button.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                log.debug("onClick: ");
+            }
+        });
     }
 
     @Override

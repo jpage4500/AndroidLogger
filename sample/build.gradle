@@ -1,5 +1,10 @@
 apply plugin: 'com.android.application'
 
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -19,7 +24,7 @@ android {
 }
 
 dependencies {
-    // compile 'com.jp.android-logger:1.0.0'
+    //compile 'com.github.jpage4500:AndroidLogger:7237e2b'                // Slf4j logging implementation for Android
     compile project(':android-logger')
 
     provided 'org.glassfish:javax.annotation:10.0-b28'
