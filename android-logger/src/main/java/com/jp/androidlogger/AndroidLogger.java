@@ -23,6 +23,8 @@ public class AndroidLogger extends MarkerIgnoringBase {
 
     /**
      * Only log trace and debug lines if user has enabled debug mode
+     *
+     * @return true if this log level is enabled
      */
     @Override
     public boolean isTraceEnabled() {
@@ -61,6 +63,8 @@ public class AndroidLogger extends MarkerIgnoringBase {
 
     /**
      * Only log trace and debug lines if user has enabled debug mode
+     *
+     * @return true if this log level is enabled
      */
     @Override
     public boolean isDebugEnabled() {
@@ -225,7 +229,7 @@ public class AndroidLogger extends MarkerIgnoringBase {
     /**
      * handle everything log() method:
      * - logs to file if enabled
-     * - logs LONG output to multipe lines if enabled
+     * - logs LONG output to multiple lines if enabled
      */
     private void log(int logLevel, String message, Throwable tr) {
         if (tr != null) {

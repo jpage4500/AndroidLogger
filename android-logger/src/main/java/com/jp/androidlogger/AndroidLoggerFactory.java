@@ -36,8 +36,10 @@ public class AndroidLoggerFactory implements ILoggerFactory {
     /**
      * set a short prefix string to the TAG field
      * NOTE: total tag length is only 23 characters so you'll want to make this VERY short
-     * Example: "blr" -> "blr_className"
+     * Example: "blr" = "blr_className"
      * - if not set just the "className" will be logged (instead of "com.package.something.className")
+     *
+     * @param prefix short string to prefix on all log output (tag field)
      */
     public void setTagPrefix(String prefix) {
         if (prefix == null || prefix.equals(tagPrefix)) {
@@ -59,9 +61,11 @@ public class AndroidLoggerFactory implements ILoggerFactory {
     /**
      * set min debug level threshold for which logging will occur
      * examples:
-     * Log.VERBOSE -> log VERBOSE and higher (DEBUG, INFO, WARN, ERROR)
-     * Log.WARN -> log WARN and higher (ERROR)
+     * Log.VERBOSE = log VERBOSE and higher (DEBUG, INFO, WARN, ERROR)
+     * Log.WARN = log WARN and higher (ERROR)
      * - defaults to Log.VERBOSE
+     *
+     * @param level Log.LEVEL to use
      */
     public void setDebugLevel(int level) {
         logLevel = level;
@@ -72,6 +76,8 @@ public class AndroidLoggerFactory implements ILoggerFactory {
      * android's Log.XX() methods will only log ~4000 characters
      * set this to true if you want to log everything
      * - useful for logging server responses for BuildConfig.DEBUG for example
+     *
+     * @param isEnabled true to log entire output to multiple lines if necessary
      */
     public void setMultilineLoggingEnabled(boolean isEnabled) {
         isMultilineLoggingEnabled = isEnabled;
@@ -83,6 +89,8 @@ public class AndroidLoggerFactory implements ILoggerFactory {
      * device but 4000 has worked on most devices I've tested on (Samsung S4, S5, S7)
      * NOTE: only used if isMultilineLoggingEnabled = true
      * - defaults to 4000 characters
+     *
+     * @param maxCharactersPerLine max characters to log per line
      */
     public void setMaxCharactersPerLine(int maxCharactersPerLine) {
         this.maxCharactersPerLine = maxCharactersPerLine;
@@ -91,6 +99,9 @@ public class AndroidLoggerFactory implements ILoggerFactory {
 
     /**
      * log to file
+     *
+     * @param append  true to append to previous log file
+     * @param logFile file to log to
      */
     public void logToFile(File logFile, boolean append) {
         this.logFile = logFile;

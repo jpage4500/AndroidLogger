@@ -1,15 +1,4 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.novoda:bintray-release:0.3.4'
-    }
-}
-
 apply plugin: 'com.android.library'
-apply plugin: 'idea'
-apply plugin: 'bintray-release'
 
 android {
     compileSdkVersion 25
@@ -28,22 +17,34 @@ android {
     }
 }
 
-idea {
-    module {
-        downloadJavadoc = true
-        downloadSources = true
-    }
-}
-
 dependencies {
-    compile 'org.slf4j:slf4j-api:1.7.22'                    // slf4j logging framework
+    compile 'org.slf4j:slf4j-api:1.7.25'                    // slf4j logging framework
 }
 
-publish {
-    userOrg = 'jpage4500'
-    groupId = 'com.github.jpage4500'
-    artifactId = 'android-logger'
-    publishVersion = android.defaultConfig.versionName
-    description = 'Simple Slf4j logger implementation for Android with tag prefix and optional file logging support'
-    website = 'https://github.com/jpage4500/AndroidLogger'
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'android-logger'
+
+    publishedGroupId = 'com.github.jpage4500'
+    libraryName = 'AndroidLogger'
+    artifact = 'android-logger'
+
+    libraryDescription = 'Simple Slf4j logger implementation for Android with tag prefix and optional file logging support'
+
+    siteUrl = 'https://github.com/jpage4500/AndroidLogger'
+    gitUrl = 'https://github.com/jpage4500/AndroidLogger.git'
+
+    libraryVersion = '1.0.0'
+
+    developerId = 'jpage4500'
+    developerName = 'Joe Page'
+    developerEmail = 'jpage4500@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
 }
+
+// Place it at the end of the file
+apply from: '../install.gradle'
+apply from: '../bintray.gradle'
