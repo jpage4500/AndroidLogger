@@ -26,6 +26,7 @@ public class AndroidLoggerFactory implements ILoggerFactory {
     private int logLevel = Log.VERBOSE;
     private boolean isMultilineLoggingEnabled;
     private int maxCharactersPerLine = 4000;
+    private int maxWrapLines = 0;
 
     // -- for logging to file --
     private static final String DEFAULT_DATE_FORMAT = "MM-dd HH:mm:ss";
@@ -98,6 +99,16 @@ public class AndroidLoggerFactory implements ILoggerFactory {
     }
 
     /**
+     * if {@link #setMultilineLoggingEnabled(boolean)} is true - you can also set a max number of lines to log for a single log statement
+     *
+     * @param maxWrapLines - max number of lines to log for a single log statement; 0 for unlimited lines to wrap to
+     */
+    public void setMaxWrapLines(int maxWrapLines) {
+        this.maxWrapLines = maxWrapLines;
+        if (EXTRA_LOGGING) Log.v(TAG, "setMaxWrapLines: " + maxWrapLines);
+    }
+
+    /**
      * log to file
      *
      * @param append  true to append to previous log file
@@ -159,6 +170,10 @@ public class AndroidLoggerFactory implements ILoggerFactory {
 
     int getMaxCharactersPerLine() {
         return maxCharactersPerLine;
+    }
+
+    int getMaxWrapLines() {
+        return maxWrapLines;
     }
 
     /**

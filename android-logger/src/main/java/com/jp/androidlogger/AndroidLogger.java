@@ -226,19 +226,23 @@ public class AndroidLogger extends MarkerIgnoringBase {
         log(Log.ERROR, ft.getMessage(), ft.getThrowable());
     }
 
+    private void log(int logLevel, String message, Throwable tr) {
+        log(logLevel, message, tr, 1);
+    }
+
     /**
      * handle everything log() method:
      * - logs to file if enabled
      * - logs LONG output to multiple lines if enabled
      */
-    private void log(int logLevel, String message, Throwable tr) {
+    private void log(int logLevel, String message, Throwable tr, int line) {
         if (tr != null) {
             // append throwable if set
             message += '\n' + Log.getStackTraceString(tr);
         }
 
         String origMessage = null;
-        if (androidLoggerFactory.isLongLoggingEnabled() && message.length() > androidLoggerFactory.getMaxCharactersPerLine()) {
+        if (androidLoggerFactory.isLongLoggingEnabled() && message.length() > androidLoggerFactory.getMaxCharactersPerLine() && androidLoggerFactory.getMaxWrapLines() > 0 && line < androidLoggerFactory.getMaxWrapLines()) {
             origMessage = message;
             message = message.substring(0, androidLoggerFactory.getMaxCharactersPerLine());
         }
@@ -266,7 +270,7 @@ public class AndroidLogger extends MarkerIgnoringBase {
 
         if (origMessage != null) {
             // recursive call to log remaining message
-            log(logLevel, origMessage.substring(androidLoggerFactory.getMaxCharactersPerLine()), null);
+            log(logLevel, origMessage.substring(androidLoggerFactory.getMaxCharactersPerLine()), null, line++);
         }
     }
 
